@@ -5,8 +5,8 @@ from dipy.segment.bundles import bundle_shape_similarity
 from dipy.align.streamlinear import StreamlineLinearRegistration
 
 # Synthetic Bundles
-tract1 = np.load('synthetic_tract_5_moving.npy')
-tract2 = np.load('synthetic_tract_5_target.npy')
+tract1 = np.load('synthetic_tract_5_target.npy')
+tract2 = np.load('synthetic_tract_5_moving.npy')
 
 tract1 = tract1.transpose((2,0,1))
 tract1 = tract1[:100]
