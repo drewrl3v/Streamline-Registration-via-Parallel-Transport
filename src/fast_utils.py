@@ -377,7 +377,7 @@ def project_to_basis(alpha_t_array, Y):
             V[ii] = V[ii] + A[ii, jj] * Y[jj]
     return A, V
 
-
+import scipy
 def tpca_from_pre(qmean, tangent_vectors):
     
     epsilon = 0.0001
@@ -394,13 +394,14 @@ def tpca_from_pre(qmean, tangent_vectors):
     C = np.cov(Aproj.T)
     U, S, V = np.linalg.svd(C)
 
-    sDiag = np.diag(S)
-    tmp = np.identity(len(S))
-    tmp = epsilon*tmp
-    Cn = U*(tmp+sDiag)*U.T
+    #sDiag = np.diag(S)
+    #tmp = np.identity(len(S))
+    #tmp = epsilon*tmp
+    #Cn = U*(tmp+sDiag)*U.T
+    #U, S, V = np.linalg.svd(Cn)
 
     Eigproj = np.dot(Aproj, U)
-    Y = gram_schmidt(tangent_vectors)
+    #Y = gram_schmidt(tangent_vectors)
 
     return Aproj, A, G, Eigproj, U, S, V
 
@@ -442,6 +443,9 @@ def dAlpha_dt(alpha):
     return alpha_t
 
 def compute_geodesic(q1, q2, stp, d, dt):
+    #
+    #q2, _ = find_best_rotation(q1, q2)
+    #
     theta = np.arccos(inner_product_L2(q1,q2))
     f = (q2 - (inner_product_L2(q1,q2))*(q1))
     f = theta * f/induced_norm_L2(f)
