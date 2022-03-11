@@ -85,9 +85,9 @@ tract1 = tract_reformat(tract1)
 tract2 = tract_reformat(tract2)
 
 # Calling Dipy to perform alignment
-#srr = StreamlineLinearRegistration(x0="affine", num_threads = 4)
-#srm = srr.optimize(static=tract1, moving=tract2)
-#tract2_dipy = srm.transform(tract2)
+srr = StreamlineLinearRegistration(x0="affine", num_threads = 4)
+srm = srr.optimize(static=tract1, moving=tract2)
+tract2_dipy = srm.transform(tract2)
 
 # Compute Bundle Similarity Score From BUAN
 rng = np.random.RandomState()
@@ -95,8 +95,8 @@ score_t1_t2 = bundle_shape_similarity(tract1, tract2, rng, [0], threshold = 6)
 print("tract1 to tract2 score: ", score_t1_t2)
 score_t1_tnew = bundle_shape_similarity(tract1, p_new, rng, [0], threshold = 6)
 print("tract1 to tract2-parallel-transport score: ", score_t1_tnew)
-#score_t1_tnew = bundle_shape_similarity(tract1, tract2_dipy, rng, [0], threshold = 6)
-#print("tract1 to tract2-dipy  score: ", score_t1_tnew)
+score_t1_tnew = bundle_shape_similarity(tract1, tract2_dipy, rng, [0], threshold = 6)
+print("tract1 to tract2-dipy  score: ", score_t1_tnew)
 
 def plot_tract(tract, rotate = 90, color = None, width = 0.3, alpha = 1):
     t = tract
@@ -110,7 +110,7 @@ scene = window.Scene()
 #scene.SetBackground(1., 1,1)
 plot_tract(tract1, rotate = 90, color = window.colors.red, width = .5, alpha = .9)
 plot_tract(tract2, rotate = 90, color = window.colors.green, width = .5, alpha = .9)
-#plot_tract(tract2_dipy, rotate = 90, color = window.colors.orange, width = .5, alpha = 1)
+plot_tract(tract2_dipy, rotate = 90, color = window.colors.orange, width = .5, alpha = 1)
 plot_tract(p_new, rotate = 90, color = window.colors.blue, width = .5, alpha = 1)
 window.show(scene)
 
