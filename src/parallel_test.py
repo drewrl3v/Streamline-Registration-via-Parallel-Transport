@@ -10,10 +10,10 @@ tract1 = np.load('synthetic_tract_5_target.npy')
 tract2 = np.load('synthetic_tract_5_moving.npy')
 
 tract1 = tract1.transpose((2,0,1))
-tract1 = tract1[:100]
+tract1 = tract1[:1000]
 
 tract2 = tract2.transpose((2,0,1))
-tract2 = tract2[:100]
+tract2 = tract2[:1000]
 
 # Record the coordinates
 coords1 = []
@@ -57,7 +57,7 @@ x = np.linalg.pinv(Aproj2) @ Aproj
 Aproj = Aproj2 @ x
 
 # 20 principal components (Max is 123)
-di = 20 #123
+di = 100 #123
 recon = np.matmul(Aproj, U[:,:di])
 recon = np.matmul(recon, U[:,:di].T)
 #print("recon:", recon.shape)
