@@ -54,11 +54,11 @@ Aproj2, _ = find_best_rotation(Aproj, Aproj2)
 # Aproj2 @ x = Aproj need to solve this
 # Apply a linear transform in coefficient space
 x = np.linalg.pinv(Aproj2) @ Aproj
-Aproj = Aproj2 @ x
+Aproj2 = Aproj2 @ x
 
 # 20 principal components (Max is 123)
 di = 100 #123
-recon = np.matmul(Aproj, U[:,:di])
+recon = np.matmul(Aproj2, U[:,:di])
 recon = np.matmul(recon, U[:,:di].T)
 #print("recon:", recon.shape)
 
