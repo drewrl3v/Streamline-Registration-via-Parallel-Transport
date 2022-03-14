@@ -29,7 +29,7 @@ for index, curve in enumerate(tract1):
     srvf_tract1[index] = curve_to_srvf(curve)
 
 # compute the Karther mean and the tangent vectors
-qmean, alpha_t_arr = karcher_mean(srvf_tract1, 1, 7, 5)
+qmean, alpha_t_arr = karcher_mean(srvf_tract1, 15, 7, 5)
 
 # Record the coordinates
 coords2 = []

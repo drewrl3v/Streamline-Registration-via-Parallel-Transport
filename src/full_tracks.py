@@ -6,13 +6,17 @@ from dipy.align.streamlinear import StreamlineLinearRegistration
 import scipy 
 
 # Synthetic Bundles
-tract1 = np.load('synthetic_tract_5_target.npy')
-tract2 = np.load('synthetic_tract_5_moving.npy')
+#tract1 = np.load('synthetic_tract_5_target.npy')
+#tract2 = np.load('synthetic_tract_5_moving.npy')
+tract1 = np.load('/home/andrew/Downloads/tract1.npy')
+tract2 = np.load('/home/andrew/Downloads/tract2.npy')
 
 tract1 = tract1.transpose((2,0,1))
+print(tract1.shape)
 tract1 = tract1[:1000]
 
 tract2 = tract2.transpose((2,0,1))
+print(tract2.shape)
 tract2 = tract2[:1000]
 
 # Record the coordinates
@@ -26,7 +30,7 @@ for index, curve in enumerate(tract1):
     srvf_tract1[index] = curve_to_srvf(curve)
 
 # compute the Karther mean and the tangent vectors
-qmean, alpha_t_arr = karcher_mean(srvf_tract1, 15, 7, 5)
+qmean, alpha_t_arr = karcher_mean(srvf_tract1, 15, 100, 40)
 
 # Record the coordinates
 coords2 = []
@@ -39,7 +43,7 @@ for index, curve in enumerate(tract2):
     srvf_tract2[index] = curve_to_srvf(curve)
 
 # compute the Karther mean and the tangent vectors
-qmean2, alpha_t_arr2 = karcher_mean(srvf_tract2, 15, 7, 5)
+qmean2, alpha_t_arr2 = karcher_mean(srvf_tract2, 15, 100, 40)
 
 # Compute the coefficient matrix Aproj
 Aproj, A, G, Eigproj, U, S, V = tpca_from_pre(qmean, alpha_t_arr)
@@ -57,7 +61,7 @@ x = np.linalg.pinv(Aproj2) @ Aproj
 Aproj = Aproj2 @ x
 
 # 20 principal components (Max is 123)
-di = 100 #123
+di = 240 #123
 recon = np.matmul(Aproj, U[:,:di])
 recon = np.matmul(recon, U[:,:di].T)
 #print("recon:", recon.shape)
@@ -67,10 +71,10 @@ N, coeff = Aproj.shape
 p_new = np.zeros((N,3,100))
 for i, gp in enumerate(recon):
     recon_alpha_t_arr = np.zeros((3,100))
-    for t in range(123): # iterating over Fourier coefficients
+    for t in range(240): # iterating over Fourier coefficients
         recon_alpha_t_arr += gp[t] * G[t]
 
-    q_recon, _ = geodesic_flow(qmean, recon_alpha_t_arr, stp = 100)
+    q_recon, _ = geodesic_flow(qmean, recon_alpha_t_arr, stp = 6)
     p_final = srvf_to_curve(q_recon)
     p_final = est_repose(p_final, coords1[i][0], coords1[i][1])
     p_new[i] = p_final
@@ -105,9 +109,9 @@ def plot_tract(tract, rotate = 90, color = None, width = 0.3, alpha = 1):
 # repositioned tract curves                                                         
 scene = window.Scene()
 #scene.SetBackground(1., 1,1)
-plot_tract(tract1, rotate = 90, color = window.colors.red, width = .5, alpha = .9)
-plot_tract(tract2, rotate = 90, color = window.colors.green, width = .5, alpha = .9)
-#plot_tract(tract2_dipy, rotate = 90, color = window.colors.orange, width = .5, alpha = 1)
+plot_tract(tract1, rotate = 90, color = window.colors.red, width = .5, alpha = 1)
+#plot_tract(tract2, rotate = 90, color = window.colors.blue, width = .5, alpha = 1)
+#plot_tract(tract2_dipy, rotate = 90, color = window.colors.blue, width = .5, alpha = 1)
 plot_tract(p_new, rotate = 90, color = window.colors.blue, width = .5, alpha = 1)
 window.show(scene)
 
