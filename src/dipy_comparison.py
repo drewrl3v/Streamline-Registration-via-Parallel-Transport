@@ -60,7 +60,7 @@ x = np.linalg.pinv(Aproj2) @ Aproj
 Aproj = Aproj2 @ x
 
 # 20 principal components (Max is 123)
-di = 20 #123
+di = 123 #123
 recon = np.matmul(Aproj, U[:,:di])
 recon = np.matmul(recon, U[:,:di].T)
 #print("recon:", recon.shape)
